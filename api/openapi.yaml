@@ -1,0 +1,74 @@
+openapi: 3.1.0
+info:
+  title: Zynt Compliance API
+  version: 1.0.0
+  description: >
+    White-label cryptographic compliance infrastructure for custodian RIA
+    platforms. Designed Anchorage-first. Verify trades pre-settlement and export
+    SEC 17a-4-compliant Merkle audit bundles.
+  contact:
+    name: Zynt Partnerships
+    email: partnerships@zynt.xyz
+servers:
+  - url: https://api.zynt.xyz
+    description: Production (Solana mainnet)
+security:
+  - ApiKeyAuth: []
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+paths:
+  /v1/health:
+    get:
+      summary: Service health
+      security: []
+      responses:
+        "200": { description: Service is healthy }
+  /v1/compliance/verify-trade:
+    post:
+      summary: Verify a trade pre-settlement
+      description: >
+        Runs the full Zynt gate (ACE attestation → ZKML risk score → audit
+        append) and returns a proof hash within one Alpenglow finality window.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [wallet, instruction, notional_usd, ace_attestation]
+              properties:
+                wallet:          { type: string }
+                instruction:     { type: string, enum: [SWAP, REBALANCE, DEPOSIT, RWA_ALLOCATE] }
+                asset_pair:      { type: array, items: { type: string } }
+                notional_usd:    { type: number }
+                advisor_id:      { type: string }
+                ace_attestation: { type: string }
+      responses:
+        "200":
+          description: Verification result with proof hash
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  approved:       { type: boolean }
+                  zkml_score:     { type: number }
+                  proof_hash:     { type: string }
+                  merkle_root:    { type: string }
+                  slot:           { type: integer }
+                  finality_ms:    { type: integer }
+                  audit_entry_id: { type: string }
+        "403": { description: ACE attestation failed pre-trade screening }
+  /v1/audit/export:
+    get:
+      summary: Export SEC 17a-4 Merkle audit bundle
+      parameters:
+        - { name: advisor, in: query, required: true, schema: { type: string } }
+        - { name: from, in: query, schema: { type: string, format: date } }
+        - { name: to, in: query, schema: { type: string, format: date } }
+      responses:
+        "200": { description: Signed, independently verifiable audit bundle }

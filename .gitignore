@@ -1,0 +1,38 @@
+# Build artifacts
+target/
+**/target/
+.anchor/
+**/.anchor/
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Solana keypairs and wallets — NEVER commit
+*-keypair.json
+id.json
+wallet.json
+*.pem
+deploy-key*
+
+# Secrets and environment
+.env
+.env.*
+*.secret
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+.vscode/
+.idea/
+
+# Claude local context
+.claude/
+
+# Confidential business materials — not for public repo
+00-MASTER-FOUNDER-PACKET.pdf
+sales/
+docs/
+legal/

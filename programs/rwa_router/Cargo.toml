@@ -1,0 +1,35 @@
+[package]
+name = "rwa_router"
+version = "0.1.0"
+description = "Tokenized RWA allocation layer (FOBXX / BUIDL / ACRED) for Zynt Protocol"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "rwa_router"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+idl-build = ["anchor-lang/idl-build", "audit_merkle/idl-build", "anchor-spl/idl-build"]
+
+[dependencies]
+anchor-lang = { workspace = true }
+# anchor-spl with token_2022 feature gives us InterfaceAccount<Mint> and
+# re-exports spl_token_2022 (for extension parsing).
+anchor-spl  = { workspace = true }
+
+# Direct dep for TokenMetadata struct (additional_metadata field).
+# spl-token-2022 3.x re-exports spl_token_metadata_interface types under
+# spl_token_2022::extension::metadata::TokenMetadata.
+# Pin to 3 to match what anchor-spl 0.31 pulls in.
+spl-token-2022            = { version = "6", features = ["no-entrypoint"] }
+# spl-token-metadata-interface provides the canonical TokenMetadata type
+# with the additional_metadata Vec<(String, String)> field used by FOBXX/BUIDL/ACRED.
+spl-token-metadata-interface = { version = "0.6" }
+
+# Core program dependencies — CPI feature exposes the cpi:: module and
+# re-exports account/program types needed for seeds::program constraints.
+audit_merkle = { path = "../audit_merkle", features = ["cpi"] }
+ace_adapter  = { path = "../ace_adapter",  features = ["cpi"] }

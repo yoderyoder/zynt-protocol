@@ -1,0 +1,24 @@
+[workspace]
+members = [
+    "audit_merkle",
+    "regulatory_oracle",
+    "hybrid_vault",
+    "ace_adapter",
+    "rwa_router",
+    "falcon_verify",
+]
+resolver = "2"
+
+[workspace.dependencies]
+anchor-lang = { version = "=0.31.0", features = ["init-if-needed"] }
+anchor-spl = { version = "=0.31.0", features = ["token_2022"] }
+spl-account-compression = { version = "1.0.0", features = ["cpi"] }
+# pyth-sdk-solana removed: 0.10.x incompatible with Agave 2.x borsh. See regulatory_oracle/src/lib.rs.
+
+[profile.release]
+overflow-checks = true
+lto = "fat"
+codegen-units = 1
+
+[profile.dev.package."*"]
+opt-level = 0

@@ -1,0 +1,18 @@
+[package]
+name = "ace_adapter"
+version = "0.1.0"
+description = "Chainlink ACE integration layer for Zynt Protocol"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "ace_adapter"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+idl-build = ["anchor-lang/idl-build"]
+
+[dependencies]
+anchor-lang = { version = "=0.31.0", features = ["init-if-needed"] }

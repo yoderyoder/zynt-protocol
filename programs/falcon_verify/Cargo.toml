@@ -1,0 +1,21 @@
+[package]
+name = "falcon_verify"
+version = "0.1.0"
+description = "Dual-mode post-quantum signature verifier (Dilithium-3 today, Falcon-512 on SIMD-0416)"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "falcon_verify"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+idl-build = ["anchor-lang/idl-build", "audit_merkle/idl-build"]
+# Enable once SIMD-0416 ships the sol_falcon512_verify syscall on mainnet:
+simd-0416 = []
+
+[dependencies]
+anchor-lang = { version = "=0.31.0", features = ["init-if-needed"] }
+audit_merkle = { path = "../audit_merkle", features = ["cpi"] }

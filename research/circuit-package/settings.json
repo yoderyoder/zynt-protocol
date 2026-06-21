@@ -1,0 +1,31 @@
+{
+  "run_args": {
+    "tolerance": {"val": 0.0, "scale": 0.001},
+    "input_scale": 7,
+    "param_scale": 7,
+    "scale_rebase_multiplier": 10,
+    "lookup_range": [-32768, 32768],
+    "logrows": 17,
+    "num_inner_cols": 2,
+    "variables": [["batch_size", 1]],
+    "input_visibility": "public",
+    "output_visibility": "public",
+    "param_visibility": "fixed",
+    "div_rebasing": false,
+    "rebase_frac_zero_constants": false,
+    "check_mode": "UNSAFE"
+  },
+  "num_rows": 131072,
+  "total_assignments": 89234,
+  "total_const_size": 45123,
+  "model_instance_shapes": [[1, 9]],
+  "model_output_scales": [7],
+  "model_input_scales": [7],
+  "module_sizes": {"kzg": [], "poseidon": [0, 0]},
+  "required_lookups": ["ReLU"],
+  "required_range_checks": [],
+  "check_mode": "UNSAFE",
+  "version": "0.9.0",
+  "num_blinding_factors": null,
+  "timestamp": 1750000000
+}

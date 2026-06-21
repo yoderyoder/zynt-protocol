@@ -1,0 +1,18 @@
+{
+  "_comment": "PLACEHOLDER — run train_and_compile.py to generate the real proof. This schema matches EZKL 0.9.x single proof format.",
+  "protocol": "single",
+  "instances": [
+    [["0x0000000000000000000000000000000000000000000000000000000000000001"]],
+    [["0x0000000000000000000000000000000000000000000000000000000000000000"]]
+  ],
+  "proof": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "transcript_type": "EVM",
+  "split": null,
+  "timestamp": 1750000000,
+  "pretty_public_inputs": {
+    "rescaled_inputs": [[0.85]],
+    "inputs": [["0x6ccccccccccccccd"]],
+    "rescaled_outputs": [[0.04]],
+    "outputs": [["0x051eb851eb851eb8"]]
+  }
+}

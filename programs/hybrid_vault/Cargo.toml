@@ -1,0 +1,24 @@
+[package]
+name = "hybrid_vault"
+version = "0.1.0"
+description = "Token-2022 vault with ZKML risk gate and Merkle audit trail for Zynt Protocol"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "hybrid_vault"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+idl-build = ["anchor-lang/idl-build", "spl-account-compression/idl-build", "anchor-spl/idl-build"]
+
+[dependencies]
+anchor-lang = { workspace = true }
+anchor-spl = { workspace = true }
+ace_adapter = { path = "../ace_adapter", features = ["cpi"] }
+regulatory_oracle = { path = "../regulatory_oracle", features = ["cpi"] }
+audit_merkle = { path = "../audit_merkle", features = ["cpi"] }
+falcon_verify = { path = "../falcon_verify", features = ["cpi"] }
+spl-account-compression = { workspace = true }

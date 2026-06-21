@@ -1,0 +1,23 @@
+[package]
+name = "regulatory_oracle"
+version = "0.1.0"
+description = "Pyth price gate + ZKML anomaly verifier for Zynt Protocol"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "regulatory_oracle"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+idl-build = ["anchor-lang/idl-build", "spl-account-compression/idl-build"]
+
+[dependencies]
+anchor-lang = { workspace = true }
+audit_merkle = { path = "../audit_merkle", features = ["cpi"] }
+falcon_verify = { path = "../falcon_verify", features = ["cpi"] }
+# pyth-sdk-solana 0.10.x is incompatible with Agave 2.x (borsh 0.10 vs 1.x).
+# Price feed parsing is inlined in lib.rs using the raw V2 account layout.
+spl-account-compression = { workspace = true }
