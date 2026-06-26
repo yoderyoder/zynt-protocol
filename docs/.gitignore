@@ -1,0 +1,5 @@
+# Block all business/investor materials in this folder
+*.docx
+*.pptx
+*.pdf
+website.html

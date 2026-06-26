@@ -34,5 +34,6 @@ desktop.ini
 # Confidential business materials — not for public repo
 00-MASTER-FOUNDER-PACKET.pdf
 sales/
-docs/
 legal/
+# docs/ is intentionally tracked — contains GitHub Pages site (docs/index.html)
+zynt-linktree_1.html
