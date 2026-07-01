@@ -15,7 +15,16 @@ no-entrypoint = []
 idl-build = ["anchor-lang/idl-build", "audit_merkle/idl-build"]
 # Enable once SIMD-0416 ships the sol_falcon512_verify syscall on mainnet:
 simd-0416 = []
+# Enable when Solana ships a native ML-DSA syscall (SIMD TBD); wire in
+# sol_mldsa_verify inside backend_syscall at that point:
+syscall-mldsa = []
 
 [dependencies]
 anchor-lang = { version = "=0.31.0", features = ["init-if-needed"] }
 audit_merkle = { path = "../audit_merkle", features = ["cpi"] }
+# Pure-Rust FIPS 204 (ML-DSA) — no_std + alloc; compiles to BPF.
+# "alloc" keeps large polynomial matrices on the heap (MaybeBox<Box<T>>),
+# staying within the 4 KB per-frame BPF stack limit.
+# Callers must add ComputeBudgetProgram.requestHeapFrame(65536) to any tx
+# that invokes verify_dilithium3; peak heap usage is ~40 KB.
+ml-dsa = { version = "0.1.1", default-features = false, features = ["alloc"] }
