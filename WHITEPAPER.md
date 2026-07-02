@@ -54,7 +54,7 @@ Zynt is composed of six Anchor programs that interact via cross-program invocati
 | `rwa_router` | Routes vault capital into tokenized real-world-asset funds (Token-2022) |
 | `falcon_verify` | Post-quantum signature verification (ML-DSA / Dilithium family) |
 
-Every state-mutating instruction appends an audit-trail leaf as its final operation, so the immutable record is a structural property of the protocol rather than an optional feature. The frontend is a Next.js dashboard (the "advisor OS") that talks to these programs directly via `@solana/web3.js` — currently a design, not a connected application.
+Every state-mutating instruction appends an audit-trail leaf as its final operation, so the immutable record is a structural property of the protocol rather than an optional feature. The frontend is a Next.js 15 dashboard (the "advisor OS") that talks to these programs directly via `@solana/web3.js`. A read-only version is now live (`apps/web`) showing the six deployed programs, live proof stream from `audit_merkle`, and real-time on-chain protocol state.
 
 ## 4. The compliance model
 
