@@ -56,7 +56,7 @@ Node LTS (20+), pnpm.
 cd programs
 avm use 0.31.0
 anchor build
-anchor test --skip-deploy        # runs against localnet; all 53 tests pass
+anchor test                      # runs against localnet; all 61 tests pass
 
 # Compliance API
 cd api
@@ -73,7 +73,7 @@ cd research/circuit-package
 All six programs compile cleanly and the full test suite passes:
 
 ```
-53 passing (52s)
+61 passing (60s)
 0 failing
 ```
 
@@ -82,9 +82,29 @@ Suite breakdown:
 |---|---|---|
 | ace_adapter | 14 | All 6 compliance gates; re-attestation |
 | e2e_integration | 12 | Full cross-program flow; 9-leaf audit trail |
-| falcon_verify | 7 | Keyring init, Dilithium-3 verify/rotate, Falcon-512 stub |
+| falcon_verify | 7 | Keyring init, ML-DSA-44 verify/rotate, Falcon-512 stub |
+| falcon_verify — PQ interface | 8 | `PqVerifierConfig` init, dispatch, mainnet guard, `set_mode` governance |
 | phase0 | 10 | Oracle + vault lifecycle; freeze + audit integrity |
 | rwa_router | 10 | FOBXX/BUIDL/ACRED alloc/redeem; ACE reject; zero-amount reject |
+
+---
+
+## Devnet deployment
+
+All six programs are live on **Solana devnet** (deployed July 2026):
+
+| Program | Devnet program ID | Explorer |
+|---|---|---|
+| `audit_merkle` | `86GxUKYc4kxmmi8raLPorRy9kobNgYn4YYwzpjdPk5UM` | [view](https://explorer.solana.com/address/86GxUKYc4kxmmi8raLPorRy9kobNgYn4YYwzpjdPk5UM?cluster=devnet) |
+| `regulatory_oracle` | `EGkzA4YWfDdUsJUTqUmNp7WGfe1XrMK8miYKdeWnxn6L` | [view](https://explorer.solana.com/address/EGkzA4YWfDdUsJUTqUmNp7WGfe1XrMK8miYKdeWnxn6L?cluster=devnet) |
+| `hybrid_vault` | `8roQCkKU3HRYM8nAdqUTWjWYdQ984fgFiL5JfveNoh4Y` | [view](https://explorer.solana.com/address/8roQCkKU3HRYM8nAdqUTWjWYdQ984fgFiL5JfveNoh4Y?cluster=devnet) |
+| `ace_adapter` | `5uSmcAfpVkXMGRCsHsBaRmRkd2CWXtQHaNhXSwCjcKTJ` | [view](https://explorer.solana.com/address/5uSmcAfpVkXMGRCsHsBaRmRkd2CWXtQHaNhXSwCjcKTJ?cluster=devnet) |
+| `rwa_router` | `6Q3qAi5z6YdU52UQYCF4UAGZSuUZqyDcTgmBcPehFWGY` | [view](https://explorer.solana.com/address/6Q3qAi5z6YdU52UQYCF4UAGZSuUZqyDcTgmBcPehFWGY?cluster=devnet) |
+| `falcon_verify` | `CCFsAnMbTkuoBE2WkQFz5dANybWjCcNmHbPrV4A9T3oR` | [view](https://explorer.solana.com/address/CCFsAnMbTkuoBE2WkQFz5dANybWjCcNmHbPrV4A9T3oR?cluster=devnet) |
+
+Upgrade authority: `HkX2yaGqTuPC2Kc5XHAexRB53YTQtfc1LUu9edArk1o4` (single devnet keypair —
+not a multisig; the 4-of-7 requirement is enforced at the program level for privileged
+instructions, not by the upgrade authority at this stage).
 
 ---
 
@@ -94,11 +114,12 @@ This project is **experimental and incomplete**. Specifically:
 
 | Component | State |
 |---|---|
-| All 6 Anchor programs | Compile and all tests pass on localnet |
-| Audit trail (Merkle) | Functional stub — appends real leaves to a real ConcurrentMerkleTree |
-| ACE compliance gate | Functional stub — enforces KYC/AML/sanctions rules in tests |
-| Dilithium-3 verification | **Stub only** — length-checks the key/sig buffers but does NOT perform actual cryptographic verification |
-| Falcon-512 verification | **Stub only** — immediately returns `FalconNotYetSupported`; awaiting SIMD-0416 |
+| All 6 Anchor programs | Compile; 61/61 tests pass on localnet; deployed to devnet |
+| Audit trail (Merkle) | Functional — appends real leaves to a real ConcurrentMerkleTree |
+| ACE compliance gate | Functional — enforces KYC/AML/sanctions/accreditation rules in tests |
+| ML-DSA-44 verification (off-chain) | **Real** — full FIPS 204 verification tested natively in Rust; 7 unit tests pass including tampered-signature rejection |
+| On-chain PQ verification | **Stub active** — `PqVerifierConfig` + swappable dispatch deployed; Stub mode performs length checks only; ZK-proof and native-syscall backends are scaffolded but return `ZkNotYetImplemented` / `SyscallUnavailable`; Stub is hard-blocked on mainnet by design |
+| Falcon-512 verification | **Not yet** — returns `FalconNotYetSupported`; awaiting SIMD-0416 syscall |
 | ZKML anomaly detection | **Stub only** — accepts any 192-byte buffer as a valid "proof"; no real ZK circuit runs on-chain |
 | Pyth oracle integration | Placeholder accounts; not connected to live Pyth feeds |
 | Mainnet deployment | Not deployed |
@@ -106,7 +127,8 @@ This project is **experimental and incomplete**. Specifically:
 | Production users | None |
 
 The crypto stubs exist to validate the overall CPI architecture and audit-trail
-plumbing. Replacing them with real verification libraries is future work.
+plumbing. The next significant milestone is the ZK-proof backend for on-chain ML-DSA
+verification (Risc0 / Bonsol path), followed by an independent security audit.
 
 ---
 

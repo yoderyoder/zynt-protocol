@@ -2,7 +2,7 @@
 
 **An experimental, post-quantum-first compliance protocol for investment advisors, built on Solana.**
 
-*Version 2.0 · June 2026 · Experimental / pre-audit · Open source · Not an offer of securities*
+*Version 2.1 · July 2026 · Experimental / pre-audit · Open source · Not an offer of securities*
 
 ---
 
@@ -10,10 +10,11 @@
 
 This is a **design document for an early-stage, experimental system**, not a description of a finished or audited product. To keep it grounded, here is exactly where Zynt stands today:
 
-- ✅ Six on-chain Anchor (Rust) programs — **all compile cleanly**
-- ✅ **Full test suite passing: 53/53** against a local validator
+- ✅ Six on-chain Anchor (Rust) programs — **all compile cleanly; all deployed to Solana devnet**
+- ✅ **Full test suite passing: 61/61** against a local validator
 - ✅ Real **ML-DSA-44 (FIPS 204)** signature-verification logic, tested natively in Rust (including tampered-signature rejection)
-- 🚧 **On-chain** post-quantum verification is **not yet live** — it hits a Solana BPF stack constraint; a zero-knowledge-proof path is in progress and a native-syscall path is planned for when Solana ships one
+- ✅ **Swappable PQ verification interface** deployed — `PqVerifierConfig` on-chain; Stub / ZK-proof / syscall backends dispatched by governance; Stub is hard-blocked on mainnet clusters by design
+- 🚧 **On-chain cryptographic** PQ verification is **not yet live** — Stub mode performs length checks only; the ZK-proof backend returns `ZkNotYetImplemented` (Risc0/Bonsol wiring is the next engineering milestone)
 - 🚧 The **ZKML compliance circuit is a stub** (placeholder), not a trained, verifying model
 - ❌ **Not security-audited. Not on mainnet. No users. No live assets.**
 - 🛠️ Built by a non-technical founder using AI-assisted development, in public
@@ -90,21 +91,24 @@ The protocol's risk module is designed around these canonical thresholds (config
 
 | Capability | Status |
 |---|---|
-| Six programs compile; 53 tests pass | ✅ Real |
+| Six programs compile; 61/61 tests pass | ✅ Real |
+| All six programs deployed to Solana devnet | ✅ Live ([explorer links in README](README.md#devnet-deployment)) |
 | Immutable Merkle audit trail (structure) | ✅ Implemented |
 | Token-2022 vault, RWA routing (structure) | ✅ Implemented |
-| ML-DSA verification logic (off-chain) | ✅ Real + tested |
-| On-chain post-quantum verification | 🚧 In progress (ZK path) / planned (syscall) |
+| ML-DSA-44 verification logic (off-chain, Rust) | ✅ Real + tested (7 unit tests, tampered-sig rejection) |
+| Swappable PQ verifier interface (on-chain) | ✅ Deployed — `PqVerifierConfig`, `verify_pq_signature`, `set_mode` governance live |
+| On-chain cryptographic PQ verification | 🚧 Stub active; ZK-proof backend next (Risc0/Bonsol) |
+| Native syscall path (`sol_mldsa_verify`) | 🗓️ Planned — scaffolded; waiting for Solana SIMD |
 | ZKML compliance circuit | 🚧 Stubbed |
 | Security audit | ❌ Not done |
 | Mainnet deployment, users, assets | ❌ None |
 
 ## 8. Roadmap (honest)
 
-- **Now:** lock the swappable verifier architecture; build the non-cryptographic parts (dispatch, config, governance, tests); scope the ZK-proof backend's feasibility.
-- **Next:** a real ZKML compliance circuit; on-chain ML-DSA via the ZK backend; devnet deployment of all six programs.
+- **Completed:** swappable PQ verifier architecture designed, implemented, and tested (dispatch, `PqVerifierConfig`, `set_mode` governance, mainnet guard, 8 new integration tests); all six programs deployed to Solana devnet; 61/61 tests passing.
+- **Next:** ZK-proof backend — Risc0 guest program that proves ML-DSA-44 execution, Bonsol on-chain verifier integration, commitment-scheme security review by a professional cryptographer.
 - **Then:** independent professional security audit — a prerequisite before any real-asset use, and the point at which specialist cryptography and Solana engineers are essential.
-- **Later:** swap to a native post-quantum syscall when Solana provides one; connected advisor-OS frontend.
+- **Later:** swap to a native post-quantum syscall when Solana provides one; real ZKML compliance circuit; connected advisor-OS frontend.
 
 ## 9. Team and resourcing
 
