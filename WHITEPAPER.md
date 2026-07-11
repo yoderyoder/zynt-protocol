@@ -29,7 +29,7 @@ Registered investment advisors operate under books-and-records obligations (Inve
 
 Two pressures make that gap matter more over time:
 
-1. **Enforcement.** Regulators have levied significant penalties for recordkeeping failures, keeping provable records on the industry's radar.
+1. **Enforcement.** Recordkeeping remains a named SEC examination priority. The current Commission has stepped back from pursuing recordkeeping lapses as standalone enforcement cases, but that is a shift in enforcement focus, not a relaxation of the standard. Under Rule 204-2, advisers must still retain complete, accurate records and be able to produce them on demand during an exam — and the common deficiency is not a missing record so much as being unable to produce it quickly and provably. That is the gap Zynt is built to close.
 2. **Data lifetime vs. quantum risk.** Compliance records carry multi-year retention requirements. The cryptography protecting long-lived records today is exactly the class most exposed to future quantum attack under a "harvest now, decrypt later" model — the longer a record must stay trustworthy, the more it matters that its integrity survives the arrival of cryptographically relevant quantum computers.
 
 Zynt's thesis: **compliance should be provable, not asserted — and built to stay provable for as long as the record must be kept.**
